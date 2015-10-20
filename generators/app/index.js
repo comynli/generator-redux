@@ -2,7 +2,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var slug = require('slug');
+var slugs = require('slugs');
 var path = require('path');
 
 module.exports = yeoman.generators.Base.extend({
@@ -33,7 +33,7 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       this.props = props;
-      this.props.appSlug = slug(props.appName).toLowerCase();
+      this.props.appSlug = slugs(props.appName).toLowerCase();
       // To access props later use this.props.someOption;
 
       done();
@@ -41,26 +41,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   configuring: {
-    libraries: function() {
-      this.npmInstall([
-        'react', 'react-redux', 'redux-devtools',
-        'redux-thunk', 'lodash'
-      ], {'save': true });
-    },
 
-    buildTools: function() {
-      this.npmInstall([
-        'webpack', 'webpack-dev-server', 'css-loader', 'jsx-loader',
-        'babel-core', 'babel-loader', 'react-hot-loader', 'style-loader',
-        'extract-text-webpack-plugin', 'cssnext-loader'
-      ], {'saveDev': true });
-    },
-
-    polyfills: function() {
-      this.npmInstall([
-        'babel-runtime'//, 'es6-promise', 'whatwg-fetch'
-      ], {'save': true });
-    }
   },
 
   writing: {
@@ -75,19 +56,20 @@ module.exports = yeoman.generators.Base.extend({
       );
       this._copyTpl('README.md' ,'README.md');
       this._copyTpl('webpack.config.js', 'webpack.config.js');
-      this._copyTpl('webpack.production.js', 'webpack.production.js');
+      this._copyTpl('proxy.config.js', 'proxy.config.js');
       this._copyTpl('server.js', 'server.js');
       this._copyTpl('index.html', 'index.html');
-      this._copyTpl('js/index.js', 'js/index.js');
-      this.directory('css', 'css');
-      this.directory('js/actions', 'js/actions');
-      this.directory('js/components', 'js/components');
-      this.directory('js/constants', 'js/constants');
-      this.directory('js/containers', 'js/containers');
-      this.directory('js/store', 'js/store');
-      this.directory('js/data', 'js/data');
-      this.directory('js/reducers', 'js/reducers');
-      this.directory('js/utils', 'js/utils');
+      this._copyTpl('app/index.js', 'app/index.js');
+      this._copyTpl('app/routes.js', 'app/routes.js');
+      this.directory('style', 'style');
+      this.directory('app/actions', 'app/actions');
+      this.directory('app/components', 'app/components');
+      this.directory('app/constants', 'app/constants');
+      this.directory('app/containers', 'app/containers');
+      this.directory('app/store', 'app/store');
+      this.directory('app/data', 'app/data');
+      this.directory('app/reducers', 'app/reducers');
+      this.directory('app/utils', 'app/utils');
     },
 
     projectfiles: function () {

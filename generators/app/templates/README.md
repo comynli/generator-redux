@@ -11,12 +11,6 @@ The generated project includes a development server on port `<%= port %>`, which
 $ npm start
 ```
 
-To run the server with the dev-tools enabled, run:
-
-```bash
-$ DEBUG=true npm start
-```
-
 To build for production, this command will output optimized production code:
 
 ```bash

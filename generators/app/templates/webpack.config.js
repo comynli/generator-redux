@@ -1,35 +1,32 @@
+var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-var devFlagPlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
-});
 
 module.exports = {
+  devtool: 'cheap-module-eval-source-map',
   entry: [
-    'webpack-dev-server/client?http://localhost:<%= port %>',
-    'webpack/hot/only-dev-server',
-    './js/index.js'
+    'webpack-hot-middleware/client',
+    './app/index'
   ],
   output: {
-    path: __dirname + '/static/',
-    publicPath: '/static/',
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    hot: true
+    publicPath: '/static/'
   },
   plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    devFlagPlugin,
-    new ExtractTextPlugin('app.css')
+    new webpack.NoErrorsPlugin()
   ],
   module: {
-    loaders: [
-      { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') }
-    ]
-  },
-  resolve: {
-    extensions: ['', '.js', '.json']
+    loaders: [{
+      test: /\.js$/,
+      loaders: ['babel'],
+      exclude: /node_modules/,
+      include: __dirname
+    },
+    {
+      test: /\.less$/,
+      loader: "style!css!less"
+    }]
   }
 };
