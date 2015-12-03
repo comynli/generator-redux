@@ -1,15 +1,20 @@
-var _ = require("lodash");
-var express = require('express');
+var webpack = require('webpack');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackHotMiddleware = require('webpack-hot-middleware');
 var httpProxy = require('http-proxy');
+var _ = require("lodash");
+
+var config = require('./webpack.config');
 var proxyConfig = require('./proxy.config');
 
-var app = new express();
+var app = new require('express')();
 var port = <%= port %>;
 
 var proxy = httpProxy.createProxyServer({});
 
-//app.use()
-app.use('/static', express.static(__dirname+'/static'));
+var compiler = webpack(config);
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+app.use(webpackHotMiddleware(compiler));
 
 app.use(function(req, res){
   var service = req.get('x-service');
